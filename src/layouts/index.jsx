@@ -1,17 +1,16 @@
-import {Button} from 'antd'
-import {Link} from 'umi'
-const Layout = ({children,history}) =>{
-  const goTargetPage=(url)=>{
-    history.push(url)
-  }
-  return(
-    <div>
-      <h1>全局模板</h1>
-      <Link to='/'>图标界面</Link>
-      <Button type='primary' onClick={()=>goTargetPage('/user/1223')}>跳转user界面</Button>
-      {children}
-    </div>
-  )
-}
+import { selectLayout } from 'utils/selectLayout';
+import BaseLayout from './BaseLayout';
+import LoginLayout from './LoginLayout';
+const Layout = ({ children, history, location }) => {
+  const layoutMap = { BaseLayout, LoginLayout };
+  const Container = layoutMap[selectLayout(location.pathname)];
+  console.log(Container);
 
-export default Layout
+  return (
+    <div>
+      <Container>{children}</Container>
+    </div>
+  );
+};
+
+export default Layout;
