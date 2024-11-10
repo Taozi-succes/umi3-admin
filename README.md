@@ -13,6 +13,3 @@ Start the dev server,
 ```bash
 $ yarn start
 ```
-
-
-umi3的后台管理系统
