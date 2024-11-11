@@ -1,0 +1,52 @@
+.form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
+  padding: 36px;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.08);
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 40px;
+      margin-right: 8px;
+    }
+    span {
+      font-size: 16px;
+      color: #1890ff;
+      font-weight: bold;
+      background-image: -webkit-gradient(
+        linear,
+        37% 34%,
+        36% 93%,
+        from(#29cdff),
+        to(#0a60ff),
+        color-stop(37%, #148eff)
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+  .ant-btn-block {
+    margin-bottom: 16px;
+  }
+  .ft-12 {
+    font-size: 12px;
+    color: #888;
+    cursor: pointer;
+  }
+  .align-right {
+    text-align: right;
+  }
+  .ant-input-group-addon {
+    padding: 0;
+    border: none;
+  }
+}

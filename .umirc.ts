@@ -6,6 +6,8 @@ export default defineConfig({
   },
   alias: {
     utils: resolve(__dirname, 'src/utils'),
+    components: resolve(__dirname, 'src/components'),
+    common: resolve(__dirname, 'src/common'),
   },
   // routes: [
   //   { path: '/', component: '@/pages/index' },
