@@ -4,6 +4,7 @@ import LoginLayout from './LoginLayout';
 const Layout = ({ children, history, location }) => {
   const layoutMap = { BaseLayout, LoginLayout };
   const Container = layoutMap[selectLayout(location.pathname)];
+  console.log(Container);
 
   return (
     <div>

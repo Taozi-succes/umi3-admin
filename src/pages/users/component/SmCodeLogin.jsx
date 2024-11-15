@@ -1,63 +1,41 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import iconMap from 'components/iconMap';
-import { getLoginRule } from 'utils/rules';
-const loginRule = getLoginRule();
 
-function SmCodeLogin({ FormItem, Input, Row, Col, Button, form }) {
+function SmCodeLogin({ FormItem, Input, Row, Col, Button }) {
   const [sendStatus, setSendStatus] = useState(false);
-  const [disabled, setDisabled] = useState(true);
-  let [count, setCount] = useState(5);
-  const timerRef = useRef(null);
-
-  const sendCode = useCallback(() => {
+  const [count, setCount] = useState(59);
+  const sendCode = () => {
+    console.log('发送验证码');
     setSendStatus(true);
-    setDisabled(true);
-    runTime();
-  });
-
-  const runTime = () => {
-    timerRef.current = setInterval(() => {
-      if (count === 0) {
-        clearInterval(timerRef.current);
+  };
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      if (count > 1) {
+        setCount(count - 1);
+      } else {
+        clearInterval(timer);
         setSendStatus(false);
-        setDisabled(false);
-        setCount(5);
-        return;
+        setCount(59);
       }
-      setCount(--count);
     }, 1000);
-  };
-  const checkMobile = async (e) => {
-    if (e.target.value) {
-      try {
-        const values = await form.validateFields(['mobile']);
-        setSendStatus(false);
-        setDisabled(false);
-      } catch (error) {
-        setSendStatus(true);
-
-        console.log('Validate Failed:', error);
-      }
-    }
-  };
-
+    return () => {
+      clearInterval(timer);
+    };
+  }, [count]);
   return (
     <>
-      <FormItem name="mobile" rules={loginRule.mobileRule} hasFeedback>
+      <FormItem>
         <Input
           prefix={iconMap.userIcon}
           placeholder="請輸入你的手機號碼"
-          onChange={(e) => {
-            checkMobile(e);
-          }}
         ></Input>
       </FormItem>
-      <FormItem name="iphoneCode" rules={loginRule.iphoneCode} hasFeedback>
+      <FormItem>
         <Input
           prefix={iconMap.passWordIcon}
           placeholder="请输入验证码"
           addonAfter={
-            <Button disabled={disabled} onClick={sendCode}>
+            <Button disabled={sendStatus} onClick={sendCode}>
               {sendStatus ? `${count} 重新发送` : '发送验证码'}
             </Button>
           }
