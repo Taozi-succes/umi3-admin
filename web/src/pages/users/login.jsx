@@ -5,6 +5,7 @@ import SmCodeLogin from './component/SmCodeLogin';
 import IconMap from 'components/iconMap';
 import logoImg from 'common/img/logo.svg';
 import {history} from 'umi';
+import http from 'services';
 import './css/login.less';
 const Login = () => {
   const FormItem = Form.Item;
@@ -17,18 +18,13 @@ const Login = () => {
       password,
       type
     }
-    fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    }).then((res) => res.json()).then((data) => {
+    http.userLogin(params).then((res) => {
+      if(res.code===0){
+        history.push('/');
+      }
+    })
 
-      console.log('data', data);
-      history.push('/');
 
-    });
   };
   const componentSelector = (props) =>
     type ? (
