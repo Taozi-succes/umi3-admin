@@ -1,47 +1,63 @@
 import React, { useEffect, useState } from 'react';
 import iconMap from 'components/iconMap';
+import { getLoginRule } from 'utils/rules';
+const loginRule = getLoginRule();
+function SmCodeLogin({ FormItem, Input, Row, Col, Button,form}) {
+  const [disabled, setDisabled] = useState(true);
+  const [currentStatus, setCurrentStatus] = useState(true);
+  let [currentTime, setCurrentTime] = useState(60);
 
-function SmCodeLogin({ FormItem, Input, Row, Col, Button }) {
-  const [sendStatus, setSendStatus] = useState(false);
-  const [count, setCount] = useState(59);
-  const sendCode = () => {
-    console.log('发送验证码');
-    setSendStatus(true);
+  //- 发送验证码组件内部进行发送
+  const _sendSmCode = async () => {
+    setCurrentStatus(false);
+    setDisabled(true);
+    runTime();
   };
-  useEffect(() => {
-    let timer = setTimeout(() => {
-      if (count > 1) {
-        setCount(count - 1);
-      } else {
+
+  //- 开始倒计时
+  const runTime = () => {
+    const timer = setInterval(() => {
+      if (currentTime === 0) {
         clearInterval(timer);
-        setSendStatus(false);
-        setCount(59);
+        setCurrentStatus(true);
+        setDisabled(false);
+        setCurrentTime(60);
+        return;
       }
+      setCurrentTime(--currentTime);
     }, 1000);
-    return () => {
-      clearInterval(timer);
-    };
-  }, [count]);
+  };
+  //- 发送验证码验证手机号是否正确
+  const mobileValChange = async () => {
+    try {
+      const status = await form.validateFields(['mobile']);
+      setDisabled(false);
+    } catch (error) {
+      setDisabled(true);
+    }
+  };
+
   return (
-    <>
-      <FormItem>
+    <div>
+      <FormItem name="mobile" rules={loginRule.mobileRule} hasFeedback>
         <Input
-          prefix={iconMap.userIcon}
-          placeholder="請輸入你的手機號碼"
-        ></Input>
+          prefix={iconMap.mobileIcon}
+          placeholder="请输入您的手机号码"
+          onChange={mobileValChange}
+        />
       </FormItem>
-      <FormItem>
+      <FormItem name="code" rules={loginRule.smCodeRule}>
         <Input
-          prefix={iconMap.passWordIcon}
-          placeholder="请输入验证码"
+          prefix={iconMap.smCodeIcon}
           addonAfter={
-            <Button disabled={sendStatus} onClick={sendCode}>
-              {sendStatus ? `${count} 重新发送` : '发送验证码'}
+            <Button onClick={_sendSmCode} disabled={disabled}>
+              {currentStatus ? '发送验证码' : `${currentTime}秒后重新发送`}
             </Button>
           }
-        ></Input>
+          placeholder="请输入验证码"
+        />
       </FormItem>
-    </>
+    </div>
   );
 }
 
